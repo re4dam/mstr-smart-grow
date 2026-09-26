@@ -10,7 +10,7 @@ Dokumen ini mendefinisikan kebutuhan fungsional dan non-fungsional untuk penguji
 Sebagai *QA / Pengembang*, saya ingin menjalankan simulator perangkat ESP32 yang memublikasikan payload telemetri realistik ke broker MQTT agar seluruh alur sistem (Edge → MQTT → Go Backend → DB → Dashboard) dapat diuji secara otomatis tanpa perangkat fisik.
 
 - **REQ-901-01 (Ubiquitous)**: THE SYSTEM SHALL menyediakan skrip simulator perangkat (berbasis Python atau Go) yang mampu menyimulasikan profil perubahan intensitas cahaya, suhu, dan kelembapan secara kontinu.
-- **REQ-901-02 (Event-driven)**: WHEN skrip simulator memublikasikan payload ke broker HiveMQ, THE SYSTEM SHALL memverifikasi bahwa:
+- **REQ-901-02 (Event-driven)**: WHEN skrip simulator memublikasikan payload ke broker Mosquitto, THE SYSTEM SHALL memverifikasi bahwa:
   1. Data tersimpan di tabel `readings` MariaDB.
   2. Data disiarkan via WebSocket ke klien yang terhubung dalam waktu < 200ms.
   3. Endpoint REST `GET /api/readings/latest` langsung mencerminkan data terbaru.

@@ -19,14 +19,12 @@ Dokumen ini berisi daftar istilah domain agrikultur/IoT dan istilah teknis peran
 - **Dimming Ratio (%)**: Rasio atau persentase siklus kerja (*duty cycle*) sinyal modulasi lebar pulsa (PWM) yang dikirimkan ke aktuator LED driver untuk mengontrol tingkat terang lampu tumbuh.
 
 ### E
+- **Eclipse Mosquitto**: Platform *message broker* MQTT open-source yang ringan (*lightweight*) dan mandiri (*self-hosted*), menggunakan file konfigurasi `mosquitto.conf` serta berkas otentikasi `password_file`/ACL untuk pertukaran pesan terdistribusi antara ESP32 dan backend Go.
 - **ESP32**: Mikrokontroler berkemampuan Wi-Fi dan Bluetooth dengan prosesor dual-core yang berfungsi sebagai pemroses utama (*brain*) di sisi perangkat fisik (*edge*).
 
 ### G
 - **Goroutine**: Utas eksekusi ringan (*lightweight thread*) yang dikelola oleh Go runtime, memungkinkan pemrosesan konkuren efisien tinggi untuk menangani konsumsi pesan MQTT dan koneksi WebSocket simultan.
 - **Grow Light**: Sumber pencahayaan buatan (LED) dengan spektrum elektromagnetik yang dioptimalkan untuk memicu fotosintesis dan pertumbuhan vegetatif/generatif tanaman.
-
-### H
-- **HiveMQ**: Platform *message broker* MQTT berkinerja tinggi yang memfasilitasi pertukaran pesan secara terdistribusi dan aman antara ESP32 dan backend Go.
 
 ### K
 - **kWh Savings (Penghematan kWh)**: Estimasi selisih antara konsumsi daya listrik lampu saat menyala 100% konstan (*baseline*) dengan konsumsi daya aktual berkat peredupan adaptif, dihitung dalam satuan kilowatt-hour.
@@ -36,6 +34,7 @@ Dokumen ini berisi daftar istilah domain agrikultur/IoT dan istilah teknis peran
 
 ### M
 - **MariaDB**: Sistem manajemen basis data relasional (RDBMS) berbasis SQL yang digunakan sebagai penyimpanan data telemetri historis pada tahap awal proyek.
+- **Mosquitto**: Lihat **Eclipse Mosquitto**.
 - **MQTT Broker**: Node server perantara dalam arsitektur publish/subscribe MQTT yang menerima pesan dari pengirim (publisher) dan meneruskannya ke penerima yang berhak (subscriber).
 - **MQTT Subscriber / Publisher**: Entitas klien MQTT; publisher bertugas memublikasikan data telemetri ke suatu topik (ESP32), sedangkan subscriber menerima data dari topik yang diminatinya (Go backend).
 - **MQTT Topic**: String hierarkis bergaris miring (misalnya `smartgrow/pot/pot-01/telemetry`) yang digunakan broker MQTT untuk memfilter dan mengarahkan rute pesan kepada subscriber yang relevan.

@@ -14,7 +14,7 @@ flowchart TD
         Simulator["ESP32 Mock Simulator\n(scripts/simulate_pot.py / .go)"]
         
         subgraph Infrastructure ["Containerized Infrastructure"]
-            Broker["HiveMQ MQTT Broker (:1883)"]
+            Broker["Eclipse Mosquitto Broker (:1883)"]
             Backend["Go Backend Service (:8080)"]
             DB[("MariaDB Database (:3306)")]
         end
@@ -107,7 +107,7 @@ CMD ["nginx", "-g", "daemon off;"]
 | **Opsi C: Cloud Managed (AWS / GCP)** | Skalabilitas tanpa batas, integrasi dengan cloud IoT (AWS IoT Core / GCP IoT). | *Overkill* dan kompleksitas arsitektur terlalu tinggi untuk prototipe awal. |
 
 ### Keputusan Awal & TODO Tim:
-- **Rekomendasi**: Menggunakan **Opsi A (Docker Compose pada VPS seperti DigitalOcean/Hetzner)** untuk menyatukan Go backend, Nginx frontend, dan MariaDB dengan biaya ekonomis.
+- **Rekomendasi**: Menggunakan **Opsi A (Docker Compose pada VPS seperti DigitalOcean/Hetzner)** untuk menyatukan Go backend, Nginx frontend, broker Mosquitto, dan MariaDB dengan biaya operasional yang sangat hemat.
 - `TODO: Tentukan cloud host / target deployment akhir. Pertanyaan untuk tim: Apakah rilis v1 akan di-deploy ke VPS tunggal menggunakan docker-compose.prod.yml atau memerlukan deployment terpisah (Frontend di Vercel/Cloudflare Pages dan Backend di PaaS/VPS)?`
 
 ---

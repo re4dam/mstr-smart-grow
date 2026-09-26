@@ -1,13 +1,13 @@
 # Spesifikasi Kebutuhan (Requirements) — Fase 2: Backend: MQTT Consumer
 
-Dokumen ini mendefinisikan kebutuhan fungsional dan non-fungsional untuk modul MQTT Consumer pada Go backend yang bertugas menghubungkan service ke HiveMQ broker, berlangganan ke topik telemetri ESP32, melakukan parsing payload JSON, memvalidasi integritas data, serta menangani skenario putus koneksi (*reconnect*).
+Dokumen ini mendefinisikan kebutuhan fungsional dan non-fungsional untuk modul MQTT Consumer pada Go backend yang bertugas menghubungkan service ke broker Eclipse Mosquitto, berlangganan ke topik telemetri ESP32, melakukan parsing payload JSON, memvalidasi integritas data, serta menangani skenario putus koneksi (*reconnect*).
 
 ---
 
 ## 1. User Stories & Acceptance Criteria (EARS Format)
 
-### US-201: Koneksi Persisten ke Broker HiveMQ
-Sebagai *sistem backend*, saya ingin mempertahankan koneksi persisten ke broker HiveMQ (lokal maupun cloud) agar telemetri dari mikrokontroler pot dapat diterima secara instan.
+### US-201: Koneksi Persisten ke Broker Eclipse Mosquitto
+Sebagai *sistem backend*, saya ingin mempertahankan koneksi persisten ke broker Eclipse Mosquitto (port 1883 default atau 8883 dengan TLS) agar telemetri dari mikrokontroler pot dapat diterima secara instan.
 
 - **REQ-201-01 (Ubiquitous)**: THE SYSTEM SHALL membuat koneksi MQTT client menggunakan pustaka `paho.mqtt.golang` dengan konfigurasi Client ID yang unik dan kredensial yang diambil dari variabel lingkungan.
 - **REQ-201-02 (State-driven)**: WHILE URL broker menggunakan skema `ssl://` atau port 8883, THE SYSTEM SHALL mengaktifkan enkripsi TLS 1.2+ dengan verifikasi sertifikat root CA standar.

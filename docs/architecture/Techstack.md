@@ -10,7 +10,7 @@ Dokumen ini mendefinisikan tumpukan teknologi (*technology stack*), pola aliran 
 | :--- | :--- | :--- |
 | **Hardware** | **ESP32** (MCU Utama / Brain)<br>- Sensor BH1750 (Lux meter)<br>- Sensor DHT11/DHT22 (Suhu & Kelembapan Udara)<br>- Capacitive Soil Moisture Sensor v1.2 (Kelembapan Tanah)<br>- Modul Driver/MOSFET (PWM Dimmer)<br>- Modul Display LCD/OLED | ESP32 memiliki komputasi dual-core yang andal, GPIO melimpah, dan modul Wi-Fi terintegrasi. Sensor BH1750 memberikan pembacaan lux digital akurat via I2C, DHT11/DHT22 stabil untuk pembacaan mikroklimat sekitar, dan sensor tanah kapasitif tahan korosi dibandingkan sensor resistif. |
 | **Firmware** | **C++ / Arduino IDE** | Ekosistem pustaka sensor yang matang dan kemudahan implementasi algoritma rule-based: *Adaptive Lighting Logic* (regulasi PWM LED) dan *Biological Threshold Evaluation* (evaluasi ambang status tanah/udara). |
-| **Connectivity** | **MQTT via HiveMQ** | Protokol MQTT berkarakteristik *lightweight* dan hemat *bandwidth* untuk pengiriman data periodik/event-driven dari ESP32. HiveMQ dipilih sebagai broker yang andal dengan dukungan koneksi TLS/SSL serta performa throughput tinggi. |
+| **Connectivity** | **MQTT via Eclipse Mosquitto** | Protokol MQTT berkarakteristik *lightweight* dan hemat *bandwidth* untuk pengiriman data periodik/event-driven dari ESP32. Eclipse Mosquitto dipilih sebagai broker open-source self-hosted yang sangat ringan, efisien dalam konsumsi sumber daya (footprint memori rendah ~10MB), serta mendukung autentikasi password/ACL dan enkripsi TLS/SSL (port 1883 default, 8883 TLS). |
 | **Backend** | **Go (Golang)**<br>- Library: `paho.mqtt.golang`<br>- HTTP & WebSocket router standard/Gorilla | Go menawarkan konkurensi tingkat tinggi yang sangat efisien melalui model *goroutine* dan *channels*. Hal ini krusial untuk menangani koneksi *MQTT consumer* yang terus terbuka secara bersamaan (*concurrent*) dengan ratusan atau ribuan koneksi *WebSocket client* tanpa overhead thread yang besar serta footprint memori yang minim. |
 | **Database** | **MariaDB** | Database relasional yang matang, mudah dipersiapkan, dan andal untuk menyimpan skema data time-series sederhana pada tahap awal pengembangan.<br><br>**Catatan**: Pilihan MariaDB saat ini bersifat sementara (*temporary choice*).<br>`TODO: Lakukan evaluasi performa dan migrasi ke database khusus time-series (seperti TimescaleDB atau InfluxDB) apabila frekuensi ingest dan volume data historis telah melampaui batas efisiensi indeks MariaDB.` |
 | **Frontend / Dashboard** | **React Router** | Menyediakan kapabilitas *data fetching* modern, navigasi klien yang responsif (*Single Page Application*), dan rendering visualisasi grafik historis (mis. Recharts/Chart.js) yang terpisah rapi dengan koneksi WebSocket untuk pembaruan instan (*live feed*). |
@@ -29,7 +29,7 @@ flowchart TD
     end
 
     subgraph Broker ["Message Broker Layer"]
-        HiveMQ["HiveMQ MQTT Broker\n(Cloud / Cluster)"]
+        Mosquitto["Eclipse Mosquitto MQTT Broker\n(Self-Hosted / Container)"]
     end
 
     subgraph BackendApp ["Go Backend Service Layer"]
@@ -50,8 +50,8 @@ flowchart TD
     end
 
     %% Data Ingestion Flow
-    ESP32 -- "1. MQTT Publish Telemetry" --> HiveMQ
-    HiveMQ -- "2. MQTT Subscribe Delivery" --> MQTTSub
+    ESP32 -- "1. MQTT Publish Telemetry" --> Mosquitto
+    Mosquitto -- "2. MQTT Subscribe Delivery" --> MQTTSub
     MQTTSub -- "3a. Raw Payload" --> PersistWorker
     PersistWorker -- "4. Write / Insert Record" --> MariaDB
 
@@ -69,7 +69,7 @@ flowchart TD
 
 ---
 
-## 3. Spesifikasi Payload MQTT (ESP32 → HiveMQ)
+## 3. Spesifikasi Payload MQTT (ESP32 → Mosquitto)
 
 ### 3.1 Konvensi Topik (*Topic Naming Convention*)
 Topik MQTT disusun dengan struktur hierarkis untuk mendukung skalabilitas multi-perangkat:
@@ -211,7 +211,7 @@ Untuk menghindari beban *polling* HTTP secara terus-menerus pada dashboard, Go B
 
 - **WebSocket URL**: `ws://{host}:{port}/ws/live`
 - **Protokol Komunikasi**: JSON over WebSocket
-- **Mekanisme**: Setiap kali worker MQTT Consumer menerima pesan dari HiveMQ, Go Backend mem-parsing data dan menyiarkannya (*broadcast*) secara non-blocking via goroutine ke semua client yang sedang terkoneksi.
+- **Mekanisme**: Setiap kali worker MQTT Consumer menerima pesan dari Mosquitto, Go Backend mem-parsing data dan menyiarkannya (*broadcast*) secara non-blocking via goroutine ke semua client yang sedang terkoneksi.
 
 #### Format Event WebSocket Broadcast
 ```json

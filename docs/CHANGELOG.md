@@ -11,7 +11,7 @@ dan proyek ini mematuhi prinsip [Semantic Versioning](https://semver.org/spec/v2
 
 ### Added
 - Setup fondasi service backend Go:
-  - Integrasi MQTT consumer menggunakan pustaka `paho.mqtt.golang` untuk berlangganan topik HiveMQ.
+  - Integrasi MQTT consumer menggunakan pustaka `paho.mqtt.golang` untuk berlangganan topik Mosquitto.
   - Setup koneksi dan skema penyimpanan dasar time-series pada MariaDB.
   - Setup WebSocket Gateway untuk *real-time broadcasting* data telemetri dari MQTT ke browser klien.
   - Implementasi REST API awal (`GET /api/readings/latest`, `GET /api/readings`, `GET /api/analytics/summary`, dan `GET /api/health`).
@@ -29,7 +29,7 @@ dan proyek ini mematuhi prinsip [Semantic Versioning](https://semver.org/spec/v2
   - `specs/` (spesifikasi pengembangan bertahap Fase 0 s.d. 9 dengan requirements EARS, desain teknis, dan tasks granular).
 
 ### Changed
-- *(Belum ada perubahan)*
+- Migrasi arsitektur MQTT broker dari HiveMQ menjadi Eclipse Mosquitto (self-hosted container) untuk menyederhanakan deployment mandiri, menekan konsumsi memori lokal (~10MB), serta standardisasi kredensial melalui file konfigurasi `mosquitto.conf` dan `password_file`.
 
 ### Fixed
 - *(Belum ada perbaikan bug)*

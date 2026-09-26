@@ -21,11 +21,11 @@ Sebagai *developer*, saya ingin mengonfigurasi kredensial broker MQTT, database 
 - **REQ-002-03 (Unwanted event)**: IF format nilai variabel lingkungan (misalnya port bukan angka numerik) tidak valid, THEN THE SYSTEM SHALL menghentikan proses inisialisasi dengan kode keluar (*exit code*) non-nol.
 
 ### US-003: Lingkungan Pengembangan Lokal (Local Stack)
-Sebagai *developer*, saya ingin menjalankan MariaDB dan HiveMQ broker lokal menggunakan satu perintah container agar proses *onboarding* dan *testing* lokal tidak memerlukan instalasi manual.
+Sebagai *developer*, saya ingin menjalankan MariaDB dan broker Eclipse Mosquitto lokal menggunakan satu perintah container agar proses *onboarding* dan *testing* lokal tidak memerlukan instalasi manual.
 
-- **REQ-003-01 (Event-driven)**: WHEN perintah `docker compose up -d` dijalankan, THE SYSTEM SHALL menjalankan kontainer MariaDB dan broker MQTT lokal dalam jaringan virtual (*bridge network*) yang sama.
-- **REQ-003-02 (Event-driven)**: WHEN kontainer MariaDB berjalan, THE SYSTEM SHALL menyediakan mekanisme *healthcheck* yang mengonfirmasi database siap menerima koneksi pada port 3306 sebelum backend mencoba terhubung.
-- **REQ-003-03 (Optional feature)**: WHERE pengembang tidak memiliki akses ke kluster HiveMQ Cloud, THE SYSTEM SHALL mendukung pengalihan ke broker MQTT lokal (HiveMQ CE atau Eclipse Mosquitto) melalui konfigurasi variabel lingkungan.
+- **REQ-003-01 (Event-driven)**: WHEN perintah `docker compose up -d` dijalankan, THE SYSTEM SHALL menjalankan kontainer MariaDB dan broker Mosquitto (port 1883 default) dalam jaringan virtual (*bridge network*) yang sama.
+- **REQ-003-02 (Event-driven)**: WHEN kontainer Mosquitto berjalan, THE SYSTEM SHALL memuat konfigurasi `mosquitto.conf` yang siap melayani koneksi MQTT pada port 1883.
+- **REQ-003-03 (State-driven)**: WHILE backend Go diinisialisasi, THE SYSTEM SHALL terhubung ke broker Mosquitto lokal melalui URL yang ditentukan di variabel lingkungan (`MQTT_BROKER_URL`).
 
 ### US-004: Standardisasi Linter & Formatter Kode
 Sebagai *developer*, saya ingin adanya aturan linting dan pemformatan otomatis untuk Go dan TypeScript/React agar basis kode tetap konsisten dan bebas dari potensi bug dasar.

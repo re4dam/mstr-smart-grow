@@ -23,7 +23,7 @@ Daftar checklist tugas implementasi granular untuk inisialisasi lingkungan dan p
 
 ## 4. Orkestrasi Lingkungan Lokal (Docker Compose)
 - [ ] **TASK-012**: Buat file `docker-compose.yml` di root untuk service MariaDB (port 3306) lengkap dengan volume persisten dan healthcheck.
-- [ ] **TASK-013**: Tambahkan service MQTT broker lokal (HiveMQ CE / Mosquitto pada port 1883) ke dalam `docker-compose.yml`.
+- [ ] **TASK-013**: Tambahkan service MQTT broker Eclipse Mosquitto (image `eclipse-mosquitto:2` pada port 1883 beserta volume konfigurasi `mosquitto.conf`) ke dalam `docker-compose.yml`.
 - [ ] **TASK-014**: Buat file `.env.example` di root repositori yang merangkum variabel untuk Docker Compose.
 - [ ] **TASK-015**: Verifikasi eksekusi end-to-end: jalankan `docker compose up -d`, verifikasi MariaDB dan broker siap menerima koneksi jaringan.
 

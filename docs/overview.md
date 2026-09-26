@@ -22,10 +22,10 @@ Sistem Smart Grow Pot beroperasi secara siklis dan terintegrasi dari sensor di p
 
 3. **Transmisi Telemetri (*MQTT Publish*)**:
    - ESP32 menyusun pembacaan sensor dan status aktuator ke dalam objek serialisasi JSON terstandarisasi.
-   - Melalui modul Wi-Fi bawaan, ESP32 memublikasikan paket data tersebut ke **HiveMQ MQTT Broker** pada topik terstruktur (`smartgrow/pot/{pot_id}/telemetry`) dengan jaminan QoS 1.
+   - Melalui modul Wi-Fi bawaan, ESP32 memublikasikan paket data tersebut ke **Eclipse Mosquitto MQTT Broker** pada topik terstruktur (`smartgrow/pot/{pot_id}/telemetry`) dengan jaminan QoS 1.
 
 4. **Konsumsi Data & Persistensi (*Go Backend Ingestion & Persistence*)**:
-   - Service **Go Backend** yang bertindak sebagai subscriber utama (menggunakan pustaka `paho.mqtt.golang`) mendengarkan (*subscribe*) pesan yang masuk pada HiveMQ broker.
+   - Service **Go Backend** yang bertindak sebagai subscriber utama (menggunakan pustaka `paho.mqtt.golang`) mendengarkan (*subscribe*) pesan yang masuk pada broker Mosquitto.
    - Ketika payload telemetri tiba, *goroutine worker* mem-parsing JSON dan menuliskan (*write/insert*) rekaman data ke database **MariaDB** untuk keperluan penyimpanan jejak historis (*time-series log*).
 
 5. **Streaming Real-Time & Penyajian API (*WebSocket Gateway & REST API*)**:
@@ -54,7 +54,7 @@ flowchart TB
     end
 
     subgraph MessagingBroker ["Message Broker Layer"]
-        HiveMQ["HiveMQ MQTT Broker\nTopic: smartgrow/pot/+/telemetry"]
+        Mosquitto["Eclipse Mosquitto MQTT Broker\nTopic: smartgrow/pot/+/telemetry"]
     end
 
     subgraph BackendSystem ["Go Backend Service"]
@@ -80,8 +80,8 @@ flowchart TB
         HistoryView["Historical Analytics & Trends\n(REST API Consumer)"]
     end
 
-    ESP -->|Wi-Fi / MQTT Publish (QoS 1)| HiveMQ
-    HiveMQ -->|MQTT Subscribe| MQTTSub
+    ESP -->|Wi-Fi / MQTT Publish (QoS 1)| Mosquitto
+    Mosquitto -->|MQTT Subscribe| MQTTSub
 
     WSGateway -->|Live Feed Push| LiveView
     RESTRouter -->|JSON Responses| HistoryView
@@ -99,11 +99,11 @@ Untuk menjaga batas arsitektur (*separation of concerns*) yang jelas, tanggung j
   - Penulisan firmware C++ di Arduino IDE yang efisien, non-blocking (menggunakan timer millis alih-alih `delay()`).
   - Implementasi *Adaptive Lighting Logic* untuk peredupan LED berbanding terbalik dengan cahaya alami.
   - Implementasi *Biological Threshold Evaluation* serta visualisasi status pada layar lokal pot.
-  - Manajemen koneksi Wi-Fi (reconnect logic) dan publikasi data telemetri JSON via protokol MQTT ke broker HiveMQ.
+  - Manajemen koneksi Wi-Fi (reconnect logic) dan publikasi data telemetri JSON via protokol MQTT ke broker Mosquitto.
 
 ### 3.2 Layer Backend Go & Database
 - **Cakupan Tanggung Jawab**:
-  - Pengelolaan koneksi subscriber ke broker HiveMQ menggunakan `paho.mqtt.golang` dengan penanganan reconnect otomatis.
+  - Pengelolaan koneksi subscriber ke broker Mosquitto menggunakan `paho.mqtt.golang` dengan penanganan reconnect otomatis.
   - Perancangan skema tabel MariaDB untuk penyimpanan data time-series sensor yang efisien.
   - Implementasi *WebSocket Gateway* untuk menyiarkan pesan MQTT yang masuk ke browser klien secara real-time.
   - Penyediaan endpoint REST API untuk kueri data historis dengan filter rentang waktu (*range filtering*).

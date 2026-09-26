@@ -44,7 +44,7 @@ type TelemetryPayload struct {
 sequenceDiagram
     autonumber
     participant ESP as ESP32 Microcontroller
-    participant Broker as HiveMQ MQTT Broker
+    participant Broker as Eclipse Mosquitto Broker
     participant Consumer as MQTT Consumer Service
     participant Validator as Payload Validator
     participant Dispatcher as Event Dispatcher (Phase 3 & 5)
@@ -115,6 +115,9 @@ Fungsi `Validate(p *TelemetryPayload) error` mengecek:
    - *Keputusan*: QoS 1 dipilih sesuai spesifikasi [Techstack.md](file:///home/readam/Zaki-Adam/Development/mstr-smart-grow/docs/architecture/Techstack.md#L80) untuk memastikan telemetri penting (termasuk status hidrasi tanah) tidak hilang di jaringan Wi-Fi rumah yang fluktuatif.
 3. **Penanganan Pesan Duplikat (QoS 1 At-Least-Once)**:
    - *Keputusan*: Ditoleransi di layer consumer. Filter idempotensi akan ditangani di layer persistensi MariaDB (Fase 3) menggunakan indeks timestamp.
+4. **Monitoring & Debugging Broker**:
+   - *Catatan*: Eclipse Mosquitto tidak memiliki web dashboard visual bawaan. Debugging operasional dilakukan menggunakan utilitas CLI `mosquitto_sub`/`mosquitto_pub` atau inspeksi file log container.
+   - `TODO: Tentukan perkakas monitoring visual untuk Mosquitto jika diperlukan pada fase operasional (mis. Mosquitto exporter untuk Prometheus/Grafana atau web management UI pihak ketiga seperti Cedalo Management Center).`
 
 ---
 

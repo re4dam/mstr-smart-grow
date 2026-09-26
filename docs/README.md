@@ -15,19 +15,19 @@ Backend berfungsi sebagai MQTT consumer, persistence worker ke MariaDB, penyedia
 
 #### Prasyarat
 - Go 1.22+ terinstal
-- Akses ke HiveMQ MQTT Broker (cloud atau lokal)
+- Akses ke Eclipse Mosquitto MQTT Broker (self-hosted via Docker atau service lokal/remote)
 - Instance MariaDB yang aktif
 
 #### Variabel Lingkungan (*Environment Variables*)
 Siapkan file `.env` di dalam direktori `backend/` atau *export* variabel berikut:
 
 ```bash
-# Konfigurasi MQTT Broker (HiveMQ)
-HIVEMQ_BROKER_URL=ssl://your-hivemq-cluster.hivemq.cloud:8883
-HIVEMQ_CLIENT_ID=smartgrow-backend-consumer
-HIVEMQ_USERNAME=your_username
-HIVEMQ_PASSWORD=your_password
-HIVEMQ_TOPIC=smartgrow/+/telemetry
+# Konfigurasi MQTT Broker (Mosquitto)
+MQTT_BROKER_URL=tcp://localhost:1883
+MQTT_CLIENT_ID=smartgrow-backend-consumer
+MQTT_USERNAME=your_username
+MQTT_PASSWORD=your_password
+MQTT_TOPIC=smartgrow/+/telemetry
 
 # Konfigurasi Database (MariaDB)
 MARIADB_HOST=localhost

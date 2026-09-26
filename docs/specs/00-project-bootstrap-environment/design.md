@@ -47,11 +47,11 @@ mstr-smart-grow/
 | :--- | :--- | :--- | :--- | :--- |
 | `APP_ENV` | `string` | `development` | Ya | `development`, `staging`, `production` |
 | `PORT` | `integer` | `8080` | Ya | Port HTTP & WebSocket server |
-| `HIVEMQ_BROKER_URL` | `string` | `tcp://localhost:1883` | Ya | Format: `tcp://host:port` atau `ssl://host:8883` |
-| `HIVEMQ_CLIENT_ID` | `string` | `smartgrow-backend-dev` | Ya | Client ID unik untuk MQTT |
-| `HIVEMQ_USERNAME` | `string` | *(kosong jika lokal)* | Tidak | Kredensial autentikasi broker |
-| `HIVEMQ_PASSWORD` | `string` | *(kosong jika lokal)* | Tidak | Kredensial autentikasi broker |
-| `HIVEMQ_TOPIC` | `string` | `smartgrow/+/telemetry` | Ya | Pola topik langganan MQTT wildcard |
+| `MQTT_BROKER_URL` | `string` | `tcp://localhost:1883` | Ya | Format: `tcp://host:1883` atau `ssl://host:8883` |
+| `MQTT_CLIENT_ID` | `string` | `smartgrow-backend-dev` | Ya | Client ID unik untuk MQTT |
+| `MQTT_USERNAME` | `string` | *(kosong jika lokal)* | Tidak | Username autentikasi Mosquitto (password_file) |
+| `MQTT_PASSWORD` | `string` | *(kosong jika lokal)* | Tidak | Password autentikasi Mosquitto |
+| `MQTT_TOPIC` | `string` | `smartgrow/+/telemetry` | Ya | Pola topik langganan MQTT wildcard |
 | `MARIADB_HOST` | `string` | `localhost` | Ya | Host server MariaDB |
 | `MARIADB_PORT` | `integer` | `3306` | Ya | Port server MariaDB |
 | `MARIADB_USER` | `string` | `smartgrow_user` | Ya | Username database |
@@ -69,7 +69,7 @@ mstr-smart-grow/
 
 ## 3. Topologi Lingkungan Lokal (Docker Compose)
 
-Untuk pengujian lokal terpadu, `docker-compose.yml` menyediakan MariaDB dan broker MQTT lokal:
+Untuk pengujian lokal terpadu, `docker-compose.yml` menyediakan MariaDB dan broker Eclipse Mosquitto lokal:
 
 ```mermaid
 flowchart LR
@@ -80,7 +80,7 @@ flowchart LR
 
     subgraph DockerBridge ["Docker Bridge Network (smartgrow-net)"]
         MariaDBCont["MariaDB 11.x Container\nInternal: 3306\nExposed: 3306"]
-        MQTTCont["MQTT Broker (HiveMQ CE / Mosquitto)\nInternal: 1883\nExposed: 1883"]
+        MQTTCont["MQTT Broker (Eclipse Mosquitto)\nInternal: 1883\nExposed: 1883"]
         VolumeDB[("Volume:\nmariadb_data")]
     end
 
@@ -92,7 +92,7 @@ flowchart LR
 
 ### Konfigurasi Service Docker Compose:
 - **`mariadb`**: Image `mariadb:11.4`, *healthcheck* menggunakan `mariadb-admin ping -h localhost`, *persistent volume* `mariadb_data`.
-- **`mqtt-broker`**: Image `hivemq/hivemq-ce:latest` atau `eclipse-mosquitto:2` untuk broker lokal ringan pada port 1883.
+- **`mqtt-broker`**: Image resmi `eclipse-mosquitto:2` pada port 1883 (MQTT standard) dan opsional 9001 (WebSocket MQTT), memuat berkas konfigurasi lokal `docker/mosquitto/mosquitto.conf` (`listener 1883`, `allow_anonymous true` untuk dev lokal).
 
 ---
 
@@ -112,10 +112,10 @@ flowchart LR
 
 1. **Monorepo vs Multi-repo**:
    - *Keputusan*: Monorepo tunggal dipilih karena mempermudah koordinasi perubahan kontrak antara API backend dan dashboard frontend serta menyederhanakan konfigurasi CI/CD.
-2. **HiveMQ Cloud vs Broker Lokal**:
-   - *Keputusan*: Mendukung skema ganda. Lingkungan default lokal menggunakan broker container (`tcp://localhost:1883`), sedangkan `ssl://` dengan kredensial disiapkan untuk kluster HiveMQ Cloud.
+2. **Self-Hosted Mosquitto vs Cloud-Managed Broker**:
+   - *Keputusan*: Mengadopsi Eclipse Mosquitto self-hosted berbasis container Docker resmi (`eclipse-mosquitto:2`). Hal ini menekan biaya operasional, menyederhanakan pengujian lokal (footprint memori ~10MB), dan memberikan kontrol penuh atas konfigurasi broker via `mosquitto.conf`.
 3. **TODO Tim**:
-   - `TODO: Tentukan apakah tim lokal sepakat menggunakan HiveMQ CE (butuh JVM, ~500MB RAM) atau Mosquitto (~10MB RAM) sebagai broker default di docker-compose.yml lokal.`
+   - `TODO: Tentukan mekanisme autentikasi Mosquitto untuk production (apakah menggunakan password_file via mosquitto_passwd atau plugin auth eksternal), serta evaluasi apakah perlu mengekspos port 9001 untuk WebSocket MQTT langsung ke edge/client.`
 
 ---
 
