@@ -105,8 +105,9 @@ npm run dev
     ├── glossary.md           # Glosarium istilah domain & teknis
     ├── CHANGELOG.md          # Log perubahan berbasis Keep a Changelog
     ├── change-requests-log.md# Tabel pelacakan usulan perubahan (Change Request)
-    └── architecture/
-        └── Techstack.md      # Detail teknologi, diagram data, payload, dan API
+    ├── architecture/
+    │   └── Techstack.md      # Detail teknologi, diagram data, payload, dan API
+    └── specs/                # Dokumen spesifikasi SDD bertahap (Fase 0 s.d. 9)
 ```
 
 ---
@@ -117,5 +118,6 @@ Untuk pemahaman mendalam tentang arsitektur dan spesifikasi proyek, silakan ruju
 - [docs/overview.md](file:///home/readam/Zaki-Adam/Development/mstr-smart-grow/docs/overview.md) — Penjelasan arsitektur menyeluruh dari sensor hingga dashboard, diagram alur sistem, serta batas tanggung jawab kerja tim.
 - [docs/architecture/Techstack.md](file:///home/readam/Zaki-Adam/Development/mstr-smart-grow/docs/architecture/Techstack.md) — Matriks teknologi, diagram alur data Mermaid, skema payload MQTT JSON, spesifikasi REST API, dan event WebSocket.
 - [docs/glossary.md](file:///home/readam/Zaki-Adam/Development/mstr-smart-grow/docs/glossary.md) — Kamus istilah domain agrikultur/lighting dan istilah teknis perangkat lunak.
+- [docs/specs/](file:///home/readam/Zaki-Adam/Development/mstr-smart-grow/docs/specs/) — Spesifikasi implementasi bertahap (*Spec-Driven Development*) Fase 0 hingga Fase 9 lengkap dengan EARS requirements, technical design, dan checklist tasks.
 - [docs/CHANGELOG.md](file:///home/readam/Zaki-Adam/Development/mstr-smart-grow/docs/CHANGELOG.md) — Riwayat revisi dan status rilis fitur.
 - [docs/change-requests-log.md](file:///home/readam/Zaki-Adam/Development/mstr-smart-grow/docs/change-requests-log.md) — Log pengajuan perubahan arsitektural dan spesifikasi sistem.

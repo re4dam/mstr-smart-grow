@@ -26,6 +26,7 @@ dan proyek ini mematuhi prinsip [Semantic Versioning](https://semver.org/spec/v2
   - `overview.md` (narasi operasional end-to-end dan pembagian tanggung jawab tim).
   - `glossary.md` (daftar istilah domain dan teknis).
   - `change-requests-log.md` (catatan pelacakan perubahan arsitektur).
+  - `specs/` (spesifikasi pengembangan bertahap Fase 0 s.d. 9 dengan requirements EARS, desain teknis, dan tasks granular).
 
 ### Changed
 - *(Belum ada perubahan)*
